@@ -1,0 +1,25 @@
+- name: Create the destination directory for docker-compose.yml
+  ansible.builtin.file:
+    path: "{{ pyproxy.compose.install_path }}"
+    state: directory
+    mode: '0755'
+
+- name: Create docker-compose.yml file
+  ansible.builtin.template:
+    src: docker-compose.yml
+    dest: "{{ pyproxy.compose.install_path }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Pull the latest image using docker-compose
+  ansible.builtin.command: docker-compose pull
+  args:
+    chdir: "{{ pyproxy.compose.install_path }}"
+  register: pull_result
+  changed_when: "'Pulling' in pull_result.stdout or 'up to date' not in pull_result.stdout"
+
+- name: Start the pyproxy service using docker-compose
+  ansible.builtin.command: docker-compose up -d
+  args:
+    chdir: "{{ pyproxy.compose.install_path }}"
+  register: up_result
+  changed_when: "'Creating' in up_result.stdout or 'Recreating' in up_result.stdout"

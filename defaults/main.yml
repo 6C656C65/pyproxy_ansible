@@ -1,0 +1,39 @@
+pyproxy:
+# "compose", "docker", "source"
+  deploy_method: "compose"
+
+# Compose
+  compose:
+    install_path: "/opt/pyproxy"
+    name: pyproxy
+    image: ghcr.io/6c656c65/pyproxy
+    tag: latest
+    bind_port:
+      - 8080:8080
+      - 5000:5000
+    volumes:
+      - /opt/pyproxy/logs:/app/logs
+    environment:
+      - name: PYPROXY_DEBUG
+        value: "True"
+
+# Docker
+  docker:
+    name: pyproxy
+    image: ghcr.io/6c656c65/pyproxy
+    tag: latest
+    bind_port:
+      - 8080:8080
+      - 5000:5000
+    volumes:
+      - /opt/pyproxy/logs:/app/logs
+    environment:
+      - name: PYPROXY_DEBUG
+        value: "True"
+
+# Source
+  source:
+    repo: "https://github.com/6C656C65/pyproxy.git"
+    install_path: "/opt/pyproxy"
+    venv_path: "/opt/pyproxy/venv"
+    service_name: "pyproxy"

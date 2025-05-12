@@ -1,0 +1,50 @@
+- name: Install git and python3-venv
+  ansible.builtin.apt:
+    name: [git, python3-venv]
+    state: present
+    update_cache: true
+
+- name: Create a user with no shell
+  ansible.builtin.user:
+    name: pyproxy
+    shell: /bin/false
+    state: present
+
+- name: Clone the repository
+  ansible.builtin.git:
+    repo: "{{ pyproxy.source.repo }}"
+    dest: "{{ pyproxy.source.install_path }}"
+    version: main
+
+- name: Configure git safe.directory for pyproxy repo
+  community.general.git_config:
+    name: safe.directory
+    value: "{{ pyproxy.source.install_path }}"
+    scope: global
+
+- name: Set ownership of the installation path
+  ansible.builtin.file:
+    path: "{{ pyproxy.source.install_path }}"
+    owner: pyproxy
+    group: pyproxy
+    recurse: true
+
+- name: Create a virtual environment
+  ansible.builtin.command: python3 -m venv {{ pyproxy.source.venv_path }}
+  args:
+    creates: "{{ pyproxy.source.venv_path }}"
+
+- name: Install dependencies
+  ansible.builtin.pip:
+    requirements: "{{ pyproxy.source.install_path }}/requirements.txt"
+    virtualenv: "{{ pyproxy.source.venv_path }}"
+
+- name: Create a systemd service
+  ansible.builtin.template:
+    src: pyproxy.service
+    dest: "/etc/systemd/system/{{ pyproxy.source.service_name }}.service"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart pyproxy service
+  changed_when: true

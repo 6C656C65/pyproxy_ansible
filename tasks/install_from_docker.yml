@@ -1,0 +1,31 @@
+- name: Prepare environment variables for Docker container
+  ansible.builtin.set_fact:
+    pyproxy_env_vars: "{{ pyproxy.docker.environment |
+                          map(attribute='name') |
+                          zip(pyproxy.docker.environment |
+                               map(attribute='value') |
+                               map('quote')) |
+                          list |
+                          items2dict }}"
+
+- name: Ensure the volume directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: 1000
+    group: 1000
+    mode: '0755'
+  loop: "{{ pyproxy.docker.volumes | map('split', ':') | map('first') | list }}"
+
+- name: Run pyproxy container
+  community.docker.docker_container:
+    name: "{{ pyproxy.docker.name }}"
+    image: "{{ pyproxy.docker.image }}:{{ pyproxy.docker.tag }}"
+    pull: true
+    recreate: true
+    state: started
+    restart_policy: always
+    published_ports: "{{ pyproxy.docker.bind_port }}"
+    volumes: "{{ pyproxy.docker.volumes }}"
+    env: "{{ pyproxy_env_vars }}"
+    detach: true

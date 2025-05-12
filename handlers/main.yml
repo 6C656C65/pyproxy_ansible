@@ -1,0 +1,6 @@
+- name: Restart pyproxy service
+  ansible.builtin.systemd:
+    name: "{{ pyproxy.source.service_name }}"
+    state: restarted
+    enabled: true
+    daemon_reload: true

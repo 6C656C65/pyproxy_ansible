@@ -1,0 +1,13 @@
+[Unit]
+Description=PyProxy Service
+After=network.target
+
+[Service]
+User=pyproxy
+ExecStart=python3 pyproxy.py
+Restart=always
+WorkingDirectory={{ pyproxy.source.install_path }}
+Environment=PATH={{ pyproxy.source.venv_path }}/bin
+
+[Install]
+WantedBy=multi-user.target

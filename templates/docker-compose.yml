@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  {{ pyproxy.compose.name }}:
+    image: "{{ pyproxy.compose.image }}:{{ pyproxy.compose.tag }}"
+    container_name: "{{ pyproxy.compose.name }}"
+    restart: always
+    ports:
+{% for port in pyproxy.compose.bind_port %}
+      - "{{ port }}"
+{% endfor %}
+    volumes:
+{% for volume in pyproxy.compose.volumes %}
+      - "{{ volume }}"
+{% endfor %}
+    environment:
+{% for env in pyproxy.compose.environment %}
+      - "{{ env.name }}={{ env.value }}"
+{% endfor %}
