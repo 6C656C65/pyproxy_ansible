@@ -39,6 +39,12 @@
     requirements: "{{ pyproxy.source.install_path }}/requirements.txt"
     virtualenv: "{{ pyproxy.source.venv_path }}"
 
+- name: Create config.ini file
+  ansible.builtin.template:
+    src: config.ini
+    dest: "{{ pyproxy.source.install_path }}/config.ini"
+    mode: '0644'
+
 - name: Create a systemd service
   ansible.builtin.template:
     src: pyproxy.service

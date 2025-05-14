@@ -11,7 +11,7 @@ services:
 {% endfor %}
     volumes:
 {% for volume in pyproxy.compose.volumes %}
-      - "{{ volume }}"
+      - "{{ volume.source }}:{{ volume.target }}"
 {% endfor %}
     environment:
 {% for env in pyproxy.compose.environment %}

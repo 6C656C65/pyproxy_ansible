@@ -1,21 +1,28 @@
 - name: Prepare environment variables for Docker container
   ansible.builtin.set_fact:
-    pyproxy_env_vars: "{{ pyproxy.docker.environment |
-                          map(attribute='name') |
-                          zip(pyproxy.docker.environment |
-                               map(attribute='value') |
-                               map('quote')) |
-                          list |
-                          items2dict }}"
+    pyproxy_env_vars: >-
+      {{ dict(pyproxy.docker.environment | map(attribute='name') | zip(pyproxy.docker.environment | map(attribute='value'))) }}
 
-- name: Ensure the volume directories exist
+- name: Create the destination directory for docker-compose.yml
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ pyproxy.docker.install_path }}"
     state: directory
+    mode: '0755'
+
+- name: Create config.ini file
+  ansible.builtin.template:
+    src: config.ini
+    dest: "{{ pyproxy.docker.install_path }}/config.ini"
+    mode: '0644'
+
+- name: Ensure volume source exists with correct type
+  ansible.builtin.file:
+    path: "{{ item.source }}"
+    state: "{{ 'directory' if item.type == 'directory' else 'touch' }}"
     owner: 1000
     group: 1000
-    mode: '0755'
-  loop: "{{ pyproxy.docker.volumes | map('split', ':') | map('first') | list }}"
+    mode: "{{ '0755' if item.type == 'directory' else '0644' }}"
+  loop: "{{ pyproxy.docker.volumes }}"
 
 - name: Run pyproxy container
   community.docker.docker_container:
@@ -26,6 +33,11 @@
     state: started
     restart_policy: always
     published_ports: "{{ pyproxy.docker.bind_port }}"
-    volumes: "{{ pyproxy.docker.volumes }}"
+    volumes: >-
+      {{ pyproxy.docker.volumes
+         | map(attribute='source')
+         | zip(pyproxy.docker.volumes | map(attribute='target'))
+         | map('join', ':')
+         | list }}
     env: "{{ pyproxy_env_vars }}"
     detach: true
