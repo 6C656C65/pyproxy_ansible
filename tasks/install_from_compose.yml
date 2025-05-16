@@ -33,7 +33,7 @@
   when: pyproxy.compose.ssl_inspect_ca_folder is defined
 
 - name: Copy SSL certificate files if var is defined
-  copy:
+  ansible.builtin.copy:
     src: "{{ pyproxy.compose.ssl_inspect_ca_folder }}/"
     dest: "{{ pyproxy.compose.install_path }}/certs/ca"
     owner: 1000
