@@ -25,6 +25,22 @@
     mode: "{{ '0755' if item.type == 'directory' else '0644' }}"
   loop: "{{ pyproxy.compose.volumes }}"
 
+- name: Create the destination directory for SSL Inspection
+  ansible.builtin.file:
+    path: "{{ pyproxy.compose.install_path }}/certs/ca"
+    state: directory
+    mode: '0755'
+  when: pyproxy.compose.ssl_inspect_ca_folder is defined
+
+- name: Copy SSL certificate files if var is defined
+  copy:
+    src: "{{ pyproxy.compose.ssl_inspect_ca_folder }}/"
+    dest: "{{ pyproxy.compose.install_path }}/certs/ca"
+    owner: 1000
+    group: 1000
+    mode: "0600"
+  when: pyproxy.compose.ssl_inspect_ca_folder is defined
+
 - name: Pull the latest image using docker-compose
   ansible.builtin.command: docker-compose pull
   args:

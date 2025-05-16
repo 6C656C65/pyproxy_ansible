@@ -45,6 +45,22 @@
     dest: "{{ pyproxy.source.install_path }}/config.ini"
     mode: '0644'
 
+- name: Create the destination directory for SSL Inspection
+  ansible.builtin.file:
+    path: "{{ pyproxy.source.install_path }}/certs/ca"
+    state: directory
+    mode: '0755'
+  when: pyproxy.source.ssl_inspect_ca_folder is defined
+
+- name: Copy SSL certificate files if var is defined
+  copy:
+    src: "{{ pyproxy.source.ssl_inspect_ca_folder }}/"
+    dest: "{{ pyproxy.source.install_path }}/certs/ca"
+    owner: 1000
+    group: 1000
+    mode: "0600"
+  when: pyproxy.source.ssl_inspect_ca_folder is defined
+
 - name: Create a systemd service
   ansible.builtin.template:
     src: pyproxy.service

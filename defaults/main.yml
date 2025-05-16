@@ -18,9 +18,13 @@ pyproxy:
       - source: /opt/pyproxy/config.ini
         target: /app/config.ini
         type: file
+      # - source: /opt/pyproxy/certs/ca
+      #   target: /app/certs/ca
+      #   type: folder
     environment:
       - name: PYPROXY_DEBUG
         value: "True"
+    # ssl_inspect_ca_folder: certs/
 
 # Docker
   docker:
@@ -38,9 +42,13 @@ pyproxy:
       - source: /opt/pyproxy/config.ini
         target: /app/config.ini
         type: file
+      # - source: /opt/pyproxy/certs/ca
+      #   target: /app/certs/ca
+      #   type: folder
     environment:
       - name: PYPROXY_DEBUG
         value: "True"
+    # ssl_inspect_ca_folder: certs/
 
 # Source
   source:
@@ -48,6 +56,7 @@ pyproxy:
     install_path: "/opt/pyproxy"
     venv_path: "/opt/pyproxy/venv"
     service_name: "pyproxy"
+    ssl_inspect_ca_folder: certs/
 
 # These variables configure the config.ini file that will be copied to the machine.
 # You must configure either a volume for the "compose" or "docker" method, or an argument for the "source" method.

@@ -24,6 +24,22 @@
     mode: "{{ '0755' if item.type == 'directory' else '0644' }}"
   loop: "{{ pyproxy.docker.volumes }}"
 
+- name: Create the destination directory for SSL Inspection
+  ansible.builtin.file:
+    path: "{{ pyproxy.docker.install_path }}/certs/ca"
+    state: directory
+    mode: '0755'
+  when: pyproxy.docker.ssl_inspect_ca_folder is defined
+
+- name: Copy SSL certificate files if var is defined
+  copy:
+    src: "{{ pyproxy.docker.ssl_inspect_ca_folder }}/"
+    dest: "{{ pyproxy.docker.install_path }}/certs/ca"
+    owner: 1000
+    group: 1000
+    mode: "0600"
+  when: pyproxy.docker.ssl_inspect_ca_folder is defined
+
 - name: Run pyproxy container
   community.docker.docker_container:
     name: "{{ pyproxy.docker.name }}"
