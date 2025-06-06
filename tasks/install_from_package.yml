@@ -1,5 +1,5 @@
 - name: "Install pyproxytools package : {{ pyproxy.package.version }}"
-  pip:
+  ansible.builtin.pip:
     name: "pyproxytools{{ '==' + pyproxy.package.version if pyproxy.package.version != 'latest' else '' }}"
     state: present
-    extra_args: --break-system-packages
+   
