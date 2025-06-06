@@ -9,6 +9,7 @@
 | Feature              | Supported |
 | -------------------- | --------- |
 | From source          | ✅        |
+| Using package        | ✅        |
 | Using Docker run     | ✅        |
 | Using Docker Compose | ✅        |
 

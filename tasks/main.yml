@@ -9,3 +9,7 @@
 - name: Include install from compose
   ansible.builtin.include_tasks: install_from_compose.yml
   when: pyproxy.deploy_method == "compose"
+
+- name: Include install from package
+  ansible.builtin.include_tasks: install_from_package.yml
+  when: pyproxy.deploy_method == "package"

@@ -1,5 +1,5 @@
 pyproxy:
-# "compose", "docker", "source"
+# "compose", "docker", "source", "package"
   deploy_method: "compose"
 
 # Compose
@@ -57,6 +57,10 @@ pyproxy:
     venv_path: "/opt/pyproxy/venv"
     service_name: "pyproxy"
     ssl_inspect_ca_folder: certs/
+
+# Package
+  package:
+    version: "latest" # 0.4.2
 
 # These variables configure the config.ini file that will be copied to the machine.
 # You must configure either a volume for the "compose" or "docker" method, or an argument for the "source" method.
