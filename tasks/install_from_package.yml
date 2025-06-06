@@ -2,4 +2,3 @@
   ansible.builtin.pip:
     name: "pyproxytools{{ '==' + pyproxy.package.version if pyproxy.package.version != 'latest' else '' }}"
     state: present
-   
