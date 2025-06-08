@@ -2,7 +2,7 @@
   <h1>pyproxy Ansible</h1>
 </div>
 
-**pyproxy Ansible** is an Ansible role for deploying the [pyproxy](https://github.com/6C656C65/pyproxy) project.
+**pyproxy Ansible** is an Ansible role for deploying the [pyproxy](https://github.com/pyproxytools/pyproxy) project.
 
 ## ⚡ **Deployment Methods**
 
@@ -18,7 +18,7 @@
 You can add the role to your playbook as a submodule. For example:
 
 ```bash
-git submodule add https://github.com/6C656C65/pyproxy_ansible roles/pyproxy
+git submodule add https://github.com/pyproxytools/pyproxy-ansible roles/pyproxy
 ```
 
 ## 🔧 **Configuration**

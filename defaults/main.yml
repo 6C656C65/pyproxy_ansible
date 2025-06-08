@@ -6,7 +6,7 @@ pyproxy:
   compose:
     install_path: "/opt/pyproxy"
     name: pyproxy
-    image: ghcr.io/6c656c65/pyproxy
+    image: ghcr.io/pyproxytools/pyproxy
     tag: latest
     bind_port:
       - 8080:8080
@@ -30,7 +30,7 @@ pyproxy:
   docker:
     install_path: "/opt/pyproxy"
     name: pyproxy
-    image: ghcr.io/6c656c65/pyproxy
+    image: ghcr.io/pyproxytools/pyproxy
     tag: latest
     bind_port:
       - 8080:8080
@@ -52,7 +52,7 @@ pyproxy:
 
 # Source
   source:
-    repo: "https://github.com/6C656C65/pyproxy.git"
+    repo: "https://github.com/pyproxytools/pyproxy.git"
     install_path: "/opt/pyproxy"
     venv_path: "/opt/pyproxy/venv"
     service_name: "pyproxy"
